@@ -4,27 +4,30 @@ import java.util.List;
 
 public class World {
 
-    public static List<Block> blocks = new ArrayList<>();
+    public static int TILESIZE = 64;
+
+    public static List<Block> blocks = new ArrayList<>(); //Blocos sólidos
 
     public World(){
-        for (int xx = 0; xx < 15; xx++) {
-            blocks.add(new Block(xx*32, 0));
+        //Faz circular o mapa com paredes
+        for (int xx = 0; xx < (Game.resolutionX / TILESIZE); xx++) {
+            blocks.add(new Block(xx*TILESIZE, 0));
         }
-        for (int xx = 0; xx < 15; xx++) {
-            blocks.add(new Block(xx*32, 480-32));
+        for (int xx = 0; xx < (Game.resolutionX / TILESIZE); xx++) {
+            blocks.add(new Block(xx*TILESIZE, Game.resolutionY - TILESIZE));
         }
 
-        for (int yy = 0; yy < 15; yy++) {
-            blocks.add(new Block(0, yy*32));
+        for (int yy = 0; yy < (Game.resolutionY  / TILESIZE); yy++) {
+            blocks.add(new Block(0, yy*TILESIZE));
         }
-        for (int yy = 0; yy < 15; yy++) {
-            blocks.add(new Block(480-32, yy*32));
+        for (int yy = 0; yy < (Game.resolutionY  / TILESIZE); yy++) {
+            blocks.add(new Block(Game.resolutionX -TILESIZE, yy*TILESIZE));
         }
     }
 
     public static boolean isFree(int x, int y){
         for (Block currentBlock : blocks) {
-            if (currentBlock.intersects(new Rectangle(x, y, 32, 32))) {
+            if (currentBlock.intersects(new Rectangle(x, y, TILESIZE, TILESIZE))) {
                 return false;
             }
         }

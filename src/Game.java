@@ -5,15 +5,19 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable, KeyListener {
-    public static int WIDHT = 480, HEIGHT = 480; //Tamanho da janela
+    public static int WIDHT = 320, HEIGHT = 180; //Tamanho da janela
+    public static int SCALE = 4;
+
+    public static int resolutionX = WIDHT * SCALE;
+    public static int resolutionY = HEIGHT * SCALE;
     public Player player;
     public World world;
 
     public Game(){
         this.addKeyListener(this);
-        this.setPreferredSize(new Dimension(WIDHT, HEIGHT));
+        this.setPreferredSize(new Dimension(resolutionX, resolutionY));
         new Spritesheet();
-        player = new Player(240, 240); //Cria o jogador nessas posições da tela
+        player = new Player(resolutionX / 2, resolutionY / 2); //Cria o jogador nessas posições da tela
         world = new World(); //Cria o cenário
     }
 
@@ -32,7 +36,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         //Fundo da tela
         g.setColor(Color.black);
-        g.fillRect(0, 0, WIDHT, HEIGHT);
+        g.fillRect(0, 0, resolutionX, resolutionY);
 
         //Renderização dos objetos.
         player.render(g);
