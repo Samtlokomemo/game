@@ -8,18 +8,25 @@ import world.World;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static main.Game.debugger;
+
 public class Player extends Entity{
-    public int spd = 6;
+    public double spd = 6;
     public boolean right, up, down, left;
     public int curAnimation = 0, curFrames = 0, targetFrames = 6;
 
     public static BufferedImage[] playerIdle, playerWalk;
     public static BufferedImage[] animation = playerIdle;
-    public boolean moved = false;
+    public boolean moved, attack = false;
     String direction;
 
     public Player(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, sprite);
+
+        this.mask.x = this.getX() + 192;
+        this.mask.y = this.getY() + 32;
+        this.mask.width = 64;
+        this.mask.height = 64;
 
         //Sprites
         playerIdle = new BufferedImage[6];
@@ -34,17 +41,18 @@ public class Player extends Entity{
     }
 
     public void tick(){
-        if(right && isFree(this.getX() + spd, this.getY())){
+        //Movimentação
+        if(right && isFree(x + spd, y)){
             x+=spd;
             direction = "right";
-        } else if (left && isFree(this.getX() - spd, this.getY())) {
+        } else if (left && isFree(x - spd, y)) {
             x-=spd;
             direction = "left";
         }
 
-        if (up && isFree(this.getX(), this.getY() - spd)){
+        if (up && isFree(x, y - spd)){
             y-=spd;
-        } else if (down && isFree(this.getX(), this.getY() + spd)) {
+        } else if (down && isFree(x, y + spd)) {
             y+=spd;
         }
 
@@ -64,11 +72,18 @@ public class Player extends Entity{
             }
         }
 
+        //Câmera
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH * Game.SCALE / 2), 0, World.WIDTH*64 - Game.WIDTH * Game.SCALE);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT * Game.SCALE / 2), 0, World.HEIGHT*64 - Game.HEIGHT * Game.SCALE);
     }
 
     public void render(Graphics g){
+        //Se quiser ver coisas de teste aperta -> ;
+        if(debugger){
+            g.setColor(Color.BLUE);
+            g.fillRect(this.getX() - Camera.x, this.getY() - Camera.y, mask.width, mask.height);
+        }
+
         if(direction == "left"){
             g.translate((this.getX() + 64) - Camera.x, this.getY() - Camera.y);
             ((Graphics2D) g).scale(-1, 1);

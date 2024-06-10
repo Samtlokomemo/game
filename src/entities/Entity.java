@@ -8,12 +8,14 @@ import world.World;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static java.lang.Math.round;
+
 public class Entity{
 
     protected double x, y;
     protected int width, height;
     private BufferedImage sprite;
-    protected Rectangle mask = new Rectangle(this.getX(), this.getY(), World.TILE_SIZE, World.TILE_SIZE);
+    protected Rectangle mask = new Rectangle(this.getX(), this.getY() - Camera.y, World.TILE_SIZE, World.TILE_SIZE);
 
     public Entity(int x, int y, int width, int height, BufferedImage sprite){
         this.x = x;
@@ -46,14 +48,26 @@ public class Entity{
 
     }
 
-    public boolean isFree(int x, int y){
+    public boolean isFree(double x, double y){
         //Colisão com tiles
         for (WallTile currentBlock : World.blocks) {
-            if(currentBlock.intersects(new Rectangle(x, y, World.TILE_SIZE, World.TILE_SIZE))){
+            if(currentBlock.intersects(new Rectangle((int) x, (int) y, World.TILE_SIZE, World.TILE_SIZE))){
                 return false;
             }
         }
         return true;
+    }
+
+    public boolean isColliding(int x, int y, Entity e){
+        Rectangle entity = new Rectangle(x, y, mask.width, mask.height);
+        Rectangle other = new Rectangle(e.getX(), e.getY(), mask.width, mask.height);
+        return entity.intersects(other);
+    }
+
+
+    //Fórmula da distância euclidiana (Pitágoras) para acha a distância entre 2 pontos.
+    public double pointDistance(int x1, int y1, int x2, int y2){
+        return round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
     }
 
     public void render(Graphics g){

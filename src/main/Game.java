@@ -1,5 +1,6 @@
 package main;
 
+import entities.Enemy;
 import entities.Entity;
 import entities.Player;
 import graphics.Spritesheet;
@@ -9,29 +10,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Game extends Canvas implements Runnable, KeyListener {
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
+    public static boolean debugger = false;
     public static int WIDTH = 192, HEIGHT = 128; //Tamanho da janela
     public static int SCALE = 4;
 
-    private BufferedImage image;
-
     public static ArrayList<Entity> entities;
+    public static ArrayList<Entity> enemies;
 
     public static Player player;
     public World world;
 
     public Game(){
+
         this.addKeyListener(this);
         this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
-        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-
+        new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         new Spritesheet();
         entities = new ArrayList<>();
+        enemies = new ArrayList<>();
 
         player = new Player(0, 0, 192, 192, Spritesheet.getSprite(Spritesheet.playerSpritesheet, 0, 0, 192, 192));
         entities.add(player);
@@ -42,6 +46,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick(){ //Onde fica toda a lógica
         for (Entity e : entities) {
+            e.tick();
+        }
+        for (Entity e : enemies){
             e.tick();
         }
     }
@@ -63,6 +70,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
         world.render(g);
         //player.render(g);
         for (Entity e : entities) {
+            e.render(g);
+        }
+        for (Entity e : enemies) {
             e.render(g);
         }
 
@@ -89,6 +99,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         //Chama a função run
         new Thread(game).start();
     }
+
+    //MAPEAMENTO TECLADO
 
     @Override
     public void run() {
@@ -123,6 +135,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
             player.right = true;
             player.moved = true;
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_SEMICOLON){
+            debugger = !debugger;
+        }
     }
 
     @Override
@@ -140,5 +156,36 @@ public class Game extends Canvas implements Runnable, KeyListener {
             player.right = false;
             player.moved = false;
         }
+    }
+
+    //MAPEAMENTO MOUSE
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON1){
+            player.attack = true;
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON1){
+            player.attack = false;
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

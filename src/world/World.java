@@ -44,7 +44,7 @@ public class World {
                         Game.player.setY(yy * TILE_SIZE);
                     }else if(pixelAtual == 0xFFff0044) {
                         //Inimigo
-                        Game.entities.add(new Enemy(xx * TILE_SIZE, yy * TILE_SIZE, 192, 192, Enemy.slimeSprite));
+                        Game.enemies.add(new Enemy(xx * TILE_SIZE, yy * TILE_SIZE, 192, 192, Enemy.slimeSprite));
                     }
                 }
             }
