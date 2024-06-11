@@ -15,25 +15,31 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
+public class Game extends Canvas implements Runnable, KeyListener {
     public static boolean debugger = false;
-    public static int WIDTH = 192, HEIGHT = 128; //Tamanho da janela
-    public static int SCALE = 4;
+    public static int WIDTH = 960, HEIGHT = 576; //Tamanho da janela
+    public static int SCALE = 1;
 
     public static ArrayList<Entity> entities;
     public static ArrayList<Entity> enemies;
 
     public static Player player;
     public World world;
+    public Menu menu;
+    public static boolean noKey;
+    public static String gameState = "MENU";
+    public static BufferedImage image;
 
     public Game(){
-
         this.addKeyListener(this);
-        this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+        setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
+        //this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
-        new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         new Spritesheet();
+
         entities = new ArrayList<>();
         enemies = new ArrayList<>();
 
@@ -42,14 +48,20 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         world = new World("/map.png"); //Cria o cenário
 
+        menu = new Menu();
+
     }
 
     public void tick(){ //Onde fica toda a lógica
-        for (Entity e : entities) {
-            e.tick();
-        }
-        for (Entity e : enemies){
-            e.tick();
+        if(Objects.equals(gameState, "GAME")){
+            for (Entity e : entities) {
+                e.tick();
+            }
+            for (Entity e : enemies){
+                e.tick();
+            }
+        }else if(Objects.equals(gameState, "MENU")){
+            menu.tick();
         }
     }
 
@@ -60,9 +72,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             return;
         }
 
-        Graphics g = bs.getDrawGraphics();
+
 
         //Fundo da tela
+        Graphics g = image.getGraphics();
         g.setColor(Color.black);
         g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 
@@ -76,18 +89,24 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             e.render(g);
         }
 
+        if(Objects.equals(gameState, "MENU")){
+            menu.render(g);
+        }
+
         g.dispose();
+        g = bs.getDrawGraphics();
+        g.drawImage(image, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
+
         bs.show();
     }
 
     public static void main(String[] args) {
         //Criação da janela
         Game game = new Game();
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("JOGO");
 
         frame.add(game);
-        frame.setTitle("Jogo");
-
+        frame.setUndecorated(true);
         frame.pack();
 
         frame.setLocationRelativeTo(null);
@@ -99,8 +118,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         //Chama a função run
         new Thread(game).start();
     }
-
-    //MAPEAMENTO TECLADO
 
     @Override
     public void run() {
@@ -115,23 +132,40 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         }
     }
 
+    //TODO GAME STATES COM SISTEMA DE ATAQUE!
+
+    //MAPEAMENTO TECLADO
+
     @Override
     public void keyTyped(KeyEvent e) {
+
 
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_W){
+        noKey = false;
+
+        if(e.getKeyCode() == KeyEvent.VK_W ||
+           e.getKeyCode() == KeyEvent.VK_UP){
             player.up = true;
             player.moved = true;
-        }else if(e.getKeyCode() == KeyEvent.VK_A){
+            if(Objects.equals(gameState, "MENU")){
+                menu.up = true;
+            }
+        }else if(e.getKeyCode() == KeyEvent.VK_A ||
+                 e.getKeyCode() == KeyEvent.VK_LEFT){
             player.left = true;
             player.moved = true;
-        }else if(e.getKeyCode() == KeyEvent.VK_S){
+        }else if(e.getKeyCode() == KeyEvent.VK_S ||
+                 e.getKeyCode() == KeyEvent.VK_DOWN){
             player.down = true;
             player.moved = true;
-        }else if(e.getKeyCode() == KeyEvent.VK_D){
+            if(Objects.equals(gameState, "MENU")){
+                menu.down = true;
+            }
+        }else if(e.getKeyCode() == KeyEvent.VK_D ||
+                 e.getKeyCode() == KeyEvent.VK_LEFT){
             player.right = true;
             player.moved = true;
         }
@@ -139,10 +173,25 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         if(e.getKeyCode() == KeyEvent.VK_SEMICOLON){
             debugger = !debugger;
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            if(Objects.equals(gameState, "MENU")){
+                menu.enter = true;
+            }
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            if(Objects.equals(gameState, "GAME")){
+                gameState = "MENU";
+                menu.pause = true;
+            }
+        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        noKey = true;
         if(e.getKeyCode() == KeyEvent.VK_W){
             player.up = false;
             player.moved = false;
@@ -156,36 +205,5 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             player.right = false;
             player.moved = false;
         }
-    }
-
-    //MAPEAMENTO MOUSE
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1){
-            player.attack = true;
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1){
-            player.attack = false;
-        }
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }

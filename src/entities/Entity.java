@@ -14,7 +14,8 @@ public class Entity{
 
     protected double x, y;
     protected int width, height;
-    private BufferedImage sprite;
+    private final BufferedImage sprite;
+    public BufferedImage[] animation;
     protected Rectangle mask = new Rectangle(this.getX(), this.getY() - Camera.y, World.TILE_SIZE, World.TILE_SIZE);
 
     public Entity(int x, int y, int width, int height, BufferedImage sprite){

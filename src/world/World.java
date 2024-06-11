@@ -2,6 +2,7 @@ package world;
 
 import entities.Enemy;
 import entities.Entity;
+import graphics.Spritesheet;
 import main.Game;
 
 import javax.imageio.ImageIO;
@@ -44,7 +45,7 @@ public class World {
                         Game.player.setY(yy * TILE_SIZE);
                     }else if(pixelAtual == 0xFFff0044) {
                         //Inimigo
-                        Game.enemies.add(new Enemy(xx * TILE_SIZE, yy * TILE_SIZE, 192, 192, Enemy.slimeSprite));
+                        Game.enemies.add(new Enemy(xx * TILE_SIZE, yy * TILE_SIZE, 192, 192, Spritesheet.enemySpritesheet));
                     }
                 }
             }
@@ -54,10 +55,10 @@ public class World {
     }
 
     public void render(Graphics g){
-        int xStart = Camera.x >> 6;
-        int yStart = Camera.y >> 6;
-        int xFinal = xStart + ((Game.WIDTH * Game.SCALE) >> 6);
-        int yFinal = yStart + ((Game.HEIGHT * Game.SCALE) >> 6);
+        int xStart = Camera.x / 64;
+        int yStart = Camera.y / 64;
+        int xFinal = xStart + ((Game.WIDTH) / 64);
+        int yFinal = yStart + ((Game.HEIGHT) / 64);
 
         for (int xx = xStart; xx <= xFinal; xx++) {
             for (int yy = yStart; yy <= yFinal; yy++) {
