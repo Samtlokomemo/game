@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class Game extends Canvas implements Runnable, KeyListener {
@@ -28,8 +29,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static Player player;
     public World world;
     public Menu menu;
+    public Fight fight;
     public static boolean noKey;
-    public static String gameState = "MENU";
+    public static String gameState = "GAME";
     public static BufferedImage image;
 
     public Game(){
@@ -48,6 +50,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         world = new World("/map.png"); //Cria o cenário
 
+        fight = new Fight();
         menu = new Menu();
 
     }
@@ -57,11 +60,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
             for (Entity e : entities) {
                 e.tick();
             }
-            for (Entity e : enemies){
-                e.tick();
+        Iterator<Entity> iterator = enemies.iterator();
+        while (iterator.hasNext()) {
+            Entity enemy = iterator.next();
+            enemy.tick(); // Chama o método tick do inimigo
+
+            // Se o inimigo foi derrotado
+            if (enemy.defeat) {
+                iterator.remove(); // Remove o inimigo da lista de forma segura
             }
+        }
+
         }else if(Objects.equals(gameState, "MENU")){
             menu.tick();
+        } else if (Objects.equals(gameState, "FIGHT")) {
+            fight.tick();
         }
     }
 
@@ -85,12 +98,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
         for (Entity e : entities) {
             e.render(g);
         }
-        for (Entity e : enemies) {
-            e.render(g);
+        if(!enemies.isEmpty()){
+            for (Entity e : enemies) {
+                e.render(g);
+            }
         }
+
 
         if(Objects.equals(gameState, "MENU")){
             menu.render(g);
+        }else if(Objects.equals(gameState, "FIGHT")){
+            fight.render(g);
         }
 
         g.dispose();
@@ -186,6 +204,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 menu.pause = true;
             }
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+            if(Objects.equals(gameState, "FIGHT")){
+                Fight.pressed = true;
+            }
+        }
+
 
     }
 

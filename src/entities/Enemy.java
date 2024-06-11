@@ -1,6 +1,7 @@
 package entities;
 
 import graphics.Spritesheet;
+import main.Fight;
 import main.Game;
 import world.Camera;
 
@@ -10,6 +11,7 @@ import java.awt.image.BufferedImage;
 import static graphics.Spritesheet.enemyIdle;
 import static graphics.Spritesheet.enemyWalk;
 import static main.Game.debugger;
+import static main.Game.gameState;
 
 public class Enemy extends Entity{
 
@@ -59,6 +61,14 @@ public class Enemy extends Entity{
                 break;
         }
 
+        //COMBATE
+        if(isColliding(this.getX(), this.getY(), Game.player)){
+            gameState = "FIGHT";
+            if(!Fight.fighting){
+                this.defeat = true;
+            }
+        }
+
         if(curFrames == targetFrames){
             curFrames = 0;
             curAnimation++;
@@ -68,6 +78,8 @@ public class Enemy extends Entity{
         }else{
             curFrames++;
         }
+
+
     }
 
     public void render(Graphics g){

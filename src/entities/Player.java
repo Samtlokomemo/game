@@ -87,9 +87,6 @@ public class Player extends Entity{
             curFrames++;
         }
 
-        //Combate
-
-
         //Câmera
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH * Game.SCALE / 2), 0, World.WIDTH*64 - Game.WIDTH * Game.SCALE);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT * Game.SCALE / 2), 0, World.HEIGHT*64 - Game.HEIGHT * Game.SCALE);

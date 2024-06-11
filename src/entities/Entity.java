@@ -12,6 +12,7 @@ import static java.lang.Math.round;
 
 public class Entity{
 
+    public boolean defeat = false;
     protected double x, y;
     protected int width, height;
     private final BufferedImage sprite;
