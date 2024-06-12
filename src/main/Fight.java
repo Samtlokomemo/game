@@ -1,5 +1,8 @@
 package main;
 
+import entities.Enemy;
+import graphics.Spritesheet;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -8,23 +11,18 @@ import static main.Game.gameState;
 public class Fight {
 
     public String[] options = {"ATACAR", "DEFENDER", "ITEM", "FUGIR"};
-    public int currentOption = 0, maxOptions = options.length - 1;
+    public int currentOption = 0, maxOptions = options.length - 1, alpha;
 
     public boolean right, left, enter;
-    public static boolean fighting = false, pressed = false;
+    public static boolean atacar, defender, item, fugir, falha;
 
     public Fight(){
-
+        alpha = 255;
     }
 
     public void tick(){
-        if(Objects.equals(gameState, "FIGHT")){
-            fighting = true;
-            if(pressed){
-                gameState = "GAME";
-                fighting = false;
-                pressed = false;
-            }
+        if (alpha > 0) {
+            alpha -= 5;
         }
 
         if(left){
@@ -38,6 +36,46 @@ public class Fight {
             currentOption++;
             if(currentOption > maxOptions){
                 currentOption = 0;
+            }
+        }
+
+        if(enter){
+            System.out.println(options[currentOption]);
+            enter = false;
+            alpha = 255;
+            atacar = false;
+            defender = false;
+            item = false;
+            fugir = false;
+
+            switch (options[currentOption]) {
+                case "ATACAR":
+                    // Ataque
+                    if (Math.random() < 0.5) {
+                        atacar = true;
+                    } else {
+                        falha = true;
+                    }
+                    break;
+                case "DEFENDER":
+                    // Defesa
+                    if (Math.random() < 0.5) {
+                        defender = true;
+                        falha = false;
+                    } else {
+                        falha = true;
+                    }
+                    break;
+                case "ITEM":
+                    // Item
+                    item = true;
+                    falha = false;
+                    break;
+                case "FUGIR":
+                    // Sair
+                    fugir = true;
+                    falha = false;
+                    break;
             }
         }
     }
@@ -64,8 +102,24 @@ public class Fight {
             }else{
                 g.setColor(Color.white);
             }
-            //g.drawString(texto, 50 + (200 * i), 300);
+            g.drawImage(Spritesheet.enemyIdle[0], spacing, 50, null);
             Menu.desenharTextoCentralizado(g, texto, new Font("arial", Font.BOLD, 20), spacing * (i + 1),500);
+        }
+        if(fugir){
+            g2.setColor(new Color(255, 0 ,0, alpha));
+            Menu.desenharTextoCentralizado(g, "VOCÊ NÃO PODE FUGIR", new Font("arial", Font.BOLD, 20),100);
+        }
+        if(atacar){
+            g2.setColor(new Color(255, 255 ,0, alpha));
+            Menu.desenharTextoCentralizado(g, "ATACOU", new Font("arial", Font.BOLD, 20),100);
+        }
+        if(item){
+            g2.setColor(new Color(255, 255 ,100, alpha));
+            Menu.desenharTextoCentralizado(g, "VOCÊ USOU O ITEM", new Font("arial", Font.BOLD, 20),100);
+        }
+        if(defender){
+            g2.setColor(new Color(0, 0 ,255, alpha));
+            Menu.desenharTextoCentralizado(g, "DEFENDEU", new Font("arial", Font.BOLD, 20),100);
         }
     }
 }

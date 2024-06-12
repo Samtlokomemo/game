@@ -2,6 +2,7 @@ package world;
 
 import entities.Enemy;
 import entities.Entity;
+import entities.Tree;
 import graphics.Spritesheet;
 import main.Game;
 
@@ -36,10 +37,19 @@ public class World {
                     if(pixelAtual == 0xFFFFFFFF) {
                         //Parede
                         blocks.add(new WallTile(xx * TILE_SIZE, yy * TILE_SIZE, Tile.TILE_WALL));
-                        for (int i = 0; i < blocks.size(); i++) {
-                            tiles[xx + (yy * WIDTH)] = blocks.get(i);
+                        for (WallTile block : blocks) {
+                            tiles[xx + (yy * WIDTH)] = block;
                         }
-                    }else if(pixelAtual == 0xFF124e89) {
+                    } else if (pixelAtual == 0xFF00ffff) {
+                        //Água
+                        blocks.add(new WallTile(xx * TILE_SIZE, yy * TILE_SIZE, Tile.WATER));
+                        for (WallTile block : blocks) {
+                            tiles[xx + (yy * WIDTH)] = block;
+                        }
+                    }else if (pixelAtual == 0xFF3e8948) {
+                        //Árvore
+                        Game.entities.add(new Tree(xx * TILE_SIZE, yy * TILE_SIZE, 112, 174, Spritesheet.treeSpritesheet));
+                    }  else if(pixelAtual == 0xFF124e89) {
                         //Player
                         Game.player.setX(xx * TILE_SIZE);
                         Game.player.setY(yy * TILE_SIZE);

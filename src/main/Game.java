@@ -1,6 +1,5 @@
 package main;
 
-import entities.Enemy;
 import entities.Entity;
 import entities.Player;
 import graphics.Spritesheet;
@@ -10,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public Game(){
         this.addKeyListener(this);
         setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
-        //this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         new Spritesheet();
@@ -50,7 +46,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         player = new Player(0, 0, 192, 192, Spritesheet.getSprite(Spritesheet.playerSpritesheet, 0, 0, 192, 192));
         entities.add(player);
 
-        world = new World("/map.png"); //Cria o cenário
+        world = new World("/level1.png"); //Cria o cenário
 
         fight = new Fight();
         menu = new Menu();
@@ -160,8 +156,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
     }
 
-    //TODO GAME STATES COM SISTEMA DE ATAQUE!
-
     //MAPEAMENTO TECLADO
 
     @Override
@@ -211,6 +205,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
             if(Objects.equals(gameState, "MENU")){
                 menu.enter = true;
+            }else if(Objects.equals(gameState, "FIGHT")){
+                fight.enter = true;
             }
         }
 
@@ -220,14 +216,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 menu.pause = true;
             }
         }
-
-        if(e.getKeyCode() == KeyEvent.VK_SPACE){
-            if(Objects.equals(gameState, "FIGHT")){
-                Fight.pressed = true;
-            }
-        }
-
-
     }
 
     @Override

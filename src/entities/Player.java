@@ -8,6 +8,7 @@ import world.World;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static graphics.Spritesheet.playerWalk;
 import static graphics.Spritesheet.playerIdle;
@@ -17,11 +18,10 @@ import static main.Game.noKey;
 
 public class Player extends Entity{
     public double spd = 6;
-    public int timer = 0;
     public boolean right, up, down, left;
     public int curAnimation = 0, curFrames = 0, targetFrames = 7;
     public static BufferedImage[] animation = playerIdle;
-    public boolean moved, attack = false;
+    public boolean moved, attack = false, canMove;
     public String state = "idle";
     int direction;
 
@@ -35,6 +35,7 @@ public class Player extends Entity{
     }
 
     public void tick(){
+        canMove = true;
         //STATE MACHINE
         switch (state){
             case "idle":
@@ -62,17 +63,17 @@ public class Player extends Entity{
         }
 
         //Movimentação
-        if(right && isFree(x + spd, y)){
+        if(right && isFree(x + spd, y) && canMove){
             x+=spd;
             direction = 1;
-        } else if (left && isFree(x - spd, y)) {
+        } else if (left && isFree(x - spd, y)  && canMove) {
             x-=spd;
             direction = -1;
         }
 
-        if (up && isFree(x, y - spd)){
+        if (up && isFree(x, y - spd)  && canMove){
             y-=spd;
-        } else if (down && isFree(x, y + spd)) {
+        } else if (down && isFree(x, y + spd)  && canMove) {
             y+=spd;
         }
 

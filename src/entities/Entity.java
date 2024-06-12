@@ -7,16 +7,25 @@ import world.World;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static java.lang.Math.round;
 
 public class Entity{
-
-    public boolean defeat = false;
+    //Métodos da construção da entidade
     protected double x, y;
     protected int width, height;
+    protected int life, atk;
     private final BufferedImage sprite;
+
+
+    public boolean defeat = false;
+
+    //Animação
     public BufferedImage[] animation;
+    public int curAnimation = 0, curFrames = 0, targetFrames;
+
+    //Máscara de colisãi
     protected Rectangle mask = new Rectangle(this.getX(), this.getY() - Camera.y, World.TILE_SIZE, World.TILE_SIZE);
 
     public Entity(int x, int y, int width, int height, BufferedImage sprite){
@@ -60,10 +69,27 @@ public class Entity{
         return true;
     }
 
-    public boolean isColliding(int x, int y, Entity e){
-        Rectangle entity = new Rectangle(x, y, mask.width, mask.height);
-        Rectangle other = new Rectangle(e.getX(), e.getY(), mask.width, mask.height);
-        return entity.intersects(other);
+
+    //Colisão
+    public boolean placeMeeting(double x, double y, ArrayList<Entity> entities) {
+        for (Entity e : entities) {
+            if (collisionCheck(this, e, x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean collisionCheck(Entity e1, Entity e2, double x, double y){
+        Rectangle bbox1 = getMask(e1, x, y);
+        Rectangle bbox2 = getMask(e2, e2.x, e2.y);
+        return bbox1.intersects(bbox2);
+    }
+
+    private Rectangle getMask(Entity e, double x, double y) {
+        int width = e.mask.width;
+        int height = e.mask.height;
+        return new Rectangle((int) x, (int) y, width, height);
     }
 
 
