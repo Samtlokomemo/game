@@ -8,7 +8,6 @@ import static graphics.Spritesheet.bg;
 
 public class Menu{
     public String[] options = {"NOVO JOGO", "OPÇÕES", "SAIR"};
-    public String[] selectedOptions = {"> NOVO JOGO <", "> OPÇÕES <", "> SAIR <"};
     public int currentOption = 0, maxOptions = options.length - 1;
     public boolean up, down, enter, pause;
 
@@ -19,7 +18,6 @@ public class Menu{
     public void tick(){
         if(pause){
             options[0] = "CONTINUAR";
-            selectedOptions[0] = "> CONTINUAR <";
         }
         if(up){
             up = false;
@@ -46,14 +44,21 @@ public class Menu{
 
     }
 
-    public void desenharTextoCentralizado(Graphics g, String text, Font font, int y){
+    public static void desenharTextoCentralizado(Graphics g, String text, Font font, int y){
         g.setFont(font);
 
         FontMetrics metrics = g.getFontMetrics(font);
         int x = (Game.WIDTH * Game.SCALE - metrics.stringWidth(text)) / 2;
-        //int y = ((Game.HEIGHT * Game.SCALE - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g.drawString(text, x, y);
+    }
+
+    public static void desenharTextoCentralizado(Graphics g, String text, Font font, int x, int y){
+        g.setFont(font);
+
+        FontMetrics metrics = g.getFontMetrics(font);
+        int adjustedX = x - metrics.stringWidth(text) / 2;
+        g.drawString(text, adjustedX, y);
     }
 
     public void render(Graphics g){
@@ -79,11 +84,11 @@ public class Menu{
             String texto = options[i];
             if(Objects.equals(options[currentOption], options[i])){
                 g.setColor(Color.yellow);
-                texto = selectedOptions[i];
+                texto = "> " + texto + " <";
             }else{
                 g.setColor(Color.white);
             }
-            desenharTextoCentralizado(g, texto, new Font("arial", Font.BOLD, 24), 220 + (35*i));
+            desenharTextoCentralizado(g, texto, new Font("arial", Font.BOLD, 20), 220 + (35*i));
         }
     }
 }

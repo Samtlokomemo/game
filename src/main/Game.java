@@ -31,8 +31,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public Menu menu;
     public Fight fight;
     public static boolean noKey;
-    public static String gameState = "GAME";
+    public static String gameState = "MENU";
     public static BufferedImage image;
+
+    public static JFrame frame;
 
     public Game(){
         this.addKeyListener(this);
@@ -80,58 +82,65 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void render(){ //Onde renderiza as imagens
         BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){ //Se não existir cria um
+        if (bs == null) {
             this.createBufferStrategy(3);
             return;
         }
 
+        //Pega a imagem no tamanho original
+        BufferedImage originalImage = new BufferedImage(WIDTH * SCALE, HEIGHT * SCALE, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = originalImage.createGraphics();
 
+        // Fundo da tela
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 
-        //Fundo da tela
-        Graphics g = image.getGraphics();
-        g.setColor(Color.black);
-        g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
-
-        //Renderização dos objetos.
-        world.render(g);
-        //player.render(g);
+        // Renderização dos objetos
+        world.render(g2d);
         for (Entity e : entities) {
-            e.render(g);
+            e.render(g2d);
         }
-        if(!enemies.isEmpty()){
+        if (!enemies.isEmpty()) {
             for (Entity e : enemies) {
-                e.render(g);
+                e.render(g2d);
             }
         }
-
-
-        if(Objects.equals(gameState, "MENU")){
-            menu.render(g);
-        }else if(Objects.equals(gameState, "FIGHT")){
-            fight.render(g);
+        if (Objects.equals(gameState, "MENU")) {
+            menu.render(g2d);
+        } else if (Objects.equals(gameState, "FIGHT")) {
+            fight.render(g2d);
         }
 
-        g.dispose();
-        g = bs.getDrawGraphics();
-        g.drawImage(image, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
+        g2d.dispose();
 
+        //Pega o tamanho da janela
+        int currentWidth = getWidth();
+        int currentHeight = getHeight();
+
+        //Ajusta no tamanho da janela
+        Graphics g = bs.getDrawGraphics();
+        g.drawImage(originalImage, 0, 0, currentWidth, currentHeight, null);
+
+        g.dispose();
         bs.show();
+    }
+
+    public static JFrame getWindow() {
+        return frame;
     }
 
     public static void main(String[] args) {
         //Criação da janela
         Game game = new Game();
-        JFrame frame = new JFrame("JOGO");
 
+        frame = new JFrame("JOGO");
         frame.add(game);
+        frame.setResizable(true);
         frame.setUndecorated(true);
         frame.pack();
-
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         frame.setVisible(true);
-
 
         //Chama a função run
         new Thread(game).start();
@@ -139,6 +148,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     @Override
     public void run() {
+        requestFocus();
         while(true){
             tick();
             render();
@@ -175,6 +185,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
                  e.getKeyCode() == KeyEvent.VK_LEFT){
             player.left = true;
             player.moved = true;
+            if(Objects.equals(gameState, "FIGHT")){
+                fight.left = true;
+            }
         }else if(e.getKeyCode() == KeyEvent.VK_S ||
                  e.getKeyCode() == KeyEvent.VK_DOWN){
             player.down = true;
@@ -186,6 +199,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
                  e.getKeyCode() == KeyEvent.VK_LEFT){
             player.right = true;
             player.moved = true;
+            if(Objects.equals(gameState, "FIGHT")){
+                fight.right = true;
+            }
         }
 
         if(e.getKeyCode() == KeyEvent.VK_SEMICOLON){
