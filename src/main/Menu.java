@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Menu{
-    public String[] options = {"JOGAR", "SAIR"};
-    public int currentOption = 0, maxOptions = options.length - 1;
+    private String[] options = {"JOGAR", "SAIR"};
+    private int currentOption = 0, maxOptions = options.length - 1;
     public boolean up, down, enter, pause;
 
     public Menu(){

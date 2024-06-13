@@ -13,23 +13,23 @@ import static main.Game.gameState;
 
 public class Fight {
 
-    public String[] options = {"ATACAR", "ITEM"};
-    public int currentOption = 0, maxOptions = options.length - 1, alpha;
+    private String[] options = {"ATACAR", "ITEM"};
+    private int currentOption = 0, maxOptions = options.length - 1, alpha;
 
     public boolean right, left, enter, playerTurn;
 
     //Sprites
-    public int playerCurAnimation = 0, playerCurFrames = 0, playerTargetFrames = 7;
-    public int enemyCurAnimation = 0, enemyCurFrames = 0, enemyTargetFrames = 7;
-    public BufferedImage[] playerAnimation = Spritesheet.playerIdle;
-    public BufferedImage[] enemyAnimation = Spritesheet.enemyIdle;
+    private int playerCurAnimation = 0, playerCurFrames = 0, playerTargetFrames = 7;
+    private int enemyCurAnimation = 0, enemyCurFrames = 0, enemyTargetFrames = 7;
+    private BufferedImage[] playerAnimation = Spritesheet.playerIdle;
+    private BufferedImage[] enemyAnimation = Spritesheet.enemyIdle;
 
     public int pocoes = 5;
 
-    public static int enemyLife = 100;
-    public int playerLife = 100;
+    private static int enemyLife = 100;
+    private int playerLife = 100;
 
-    String texto = "";
+    private String texto = "";
 
     public Fight(){
         alpha = 255;

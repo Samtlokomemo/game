@@ -1,8 +1,6 @@
 package world;
 
 import entities.Enemy;
-import entities.Entity;
-import entities.Tree;
 import graphics.Spritesheet;
 import main.Game;
 

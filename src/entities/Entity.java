@@ -15,15 +15,14 @@ public class Entity{
     //Métodos da construção da entidade
     protected double x, y;
     protected int width, height;
-    public static int maxLife, life, atk;
     private final BufferedImage sprite;
 
 
     public boolean destroy = false;
 
     //Animação
-    public BufferedImage[] animation;
-    public int curAnimation = 0, curFrames = 0, targetFrames;
+    protected BufferedImage[] animation;
+    protected int curAnimation = 0, curFrames = 0, targetFrames;
 
     //Máscara de colisão
     protected Rectangle mask = new Rectangle(this.getX(), this.getY() - Camera.y, World.TILE_SIZE, World.TILE_SIZE);
@@ -59,7 +58,7 @@ public class Entity{
 
     }
 
-    public boolean isFree(double x, double y){
+    protected boolean isFree(double x, double y){
         //Colisão com tiles
         for (WallTile currentBlock : World.blocks) {
             if(currentBlock.intersects(new Rectangle((int) x, (int) y, World.TILE_SIZE, World.TILE_SIZE))){
@@ -69,18 +68,7 @@ public class Entity{
         return true;
     }
 
-
-    //Colisão
-    public boolean placeMeeting(double x, double y, ArrayList<Entity> entities) {
-        for (Entity e : entities) {
-            if (collisionCheck(this, e, x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean collisionCheck(Entity e1, Entity e2, double x, double y){
+    protected boolean collisionCheck(Entity e1, Entity e2, double x, double y){
         Rectangle bbox1 = getMask(e1, x, y);
         Rectangle bbox2 = getMask(e2, e2.x, e2.y);
         return bbox1.intersects(bbox2);
@@ -94,7 +82,7 @@ public class Entity{
 
 
     //Fórmula da distância euclidiana (Pitágoras) para acha a distância entre 2 pontos.
-    public double pointDistance(int x1, int y1, int x2, int y2){
+    protected double pointDistance(int x1, int y1, int x2, int y2){
         return round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
     }
 

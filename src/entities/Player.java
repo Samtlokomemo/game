@@ -17,17 +17,11 @@ import static main.Game.debugger;
 import static main.Game.noKey;
 
 public class Player extends Entity{
-    public double spd = 6;
-    public boolean right, up, down, left;
-    public int curAnimation = 0, curFrames = 0, targetFrames = 7;
-    public static BufferedImage[] animation = playerIdle;
-    public boolean moved, attack = false, canMove;
-    public String state = "idle";
-    int direction;
-
-    //ITENS
-    //public static ArrayList<Itens> inventory = new ArrayList<>();
-
+    private double spd = 6;
+    public boolean right, up, down, left, moved, attack = false, canMove;
+    private int curAnimation = 0, curFrames = 0, targetFrames = 7, direction;
+    private static BufferedImage[] animation = playerIdle;
+    private String state = "idle";
 
     public Player(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, sprite);
@@ -36,9 +30,6 @@ public class Player extends Entity{
         this.mask.y = this.getY() + 32;
         this.mask.width = 64;
         this.mask.height = 64;
-        maxLife = 100;
-        life = maxLife;
-        atk = 10;
     }
 
     public void tick(){

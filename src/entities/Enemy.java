@@ -14,8 +14,8 @@ import static main.Game.debugger;
 import static main.Game.gameState;
 
 public class Enemy extends Entity{
-    public int direction = 1;
-    public static int cd = 60;
+    private int direction = 1;
+    private static int cd = 60;
     public static boolean lost = false;
 
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
