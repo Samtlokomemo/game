@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Spritesheet {
-    public static BufferedImage playerSpritesheet, tileSpritesheet, enemySpritesheet, bg, water, treeSpritesheet;
+    public static BufferedImage playerSpritesheet, tileSpritesheet, enemySpritesheet, water, treeSpritesheet, meat, gold;
     public static BufferedImage[] playerIdle, playerWalk, playerAtk, enemyIdle, enemyWalk, enemyAtk, treeIdle;
 
     public Spritesheet(){
@@ -17,7 +17,6 @@ public class Spritesheet {
             enemySpritesheet = ImageIO.read(Objects.requireNonNull(getClass().getResource("/enemySpritesheet.png")));
             water = ImageIO.read(Objects.requireNonNull(getClass().getResource("/water.png")));
             treeSpritesheet = ImageIO.read(Objects.requireNonNull(getClass().getResource("/tree.png")));
-            bg = ImageIO.read(Objects.requireNonNull(getClass().getResource("/bg.jpeg")));
 
         }catch (IOException e){
             e.printStackTrace();
@@ -54,12 +53,6 @@ public class Spritesheet {
         enemyAtk = new BufferedImage[6];
         for (int i = 0; i < 6; i++) {
             enemyAtk[i] = Spritesheet.getSprite(Spritesheet.enemySpritesheet, i * 192, 384, 192, 192);
-        }
-
-        //Árvore
-        treeIdle = new BufferedImage[5];
-        for (int i = 0; i < 5; i++) {
-            treeIdle[i] = Spritesheet.getSprite(Spritesheet.treeSpritesheet, i * 112, 0, 112, 174);
         }
     }
 

@@ -15,17 +15,17 @@ public class Entity{
     //Métodos da construção da entidade
     protected double x, y;
     protected int width, height;
-    protected int life, atk;
+    public static int maxLife, life, atk;
     private final BufferedImage sprite;
 
 
-    public boolean defeat = false;
+    public boolean destroy = false;
 
     //Animação
     public BufferedImage[] animation;
     public int curAnimation = 0, curFrames = 0, targetFrames;
 
-    //Máscara de colisãi
+    //Máscara de colisão
     protected Rectangle mask = new Rectangle(this.getX(), this.getY() - Camera.y, World.TILE_SIZE, World.TILE_SIZE);
 
     public Entity(int x, int y, int width, int height, BufferedImage sprite){

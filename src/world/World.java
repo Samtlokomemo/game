@@ -20,6 +20,7 @@ public class World {
     public static int TILE_SIZE = 64;
     public static int WIDTH, HEIGHT;
 
+
     public World(String path){
         try{
             BufferedImage map = ImageIO.read(Objects.requireNonNull(getClass().getResource(path)));
@@ -46,10 +47,10 @@ public class World {
                         for (WallTile block : blocks) {
                             tiles[xx + (yy * WIDTH)] = block;
                         }
-                    }else if (pixelAtual == 0xFF3e8948) {
-                        //Árvore
-                        Game.entities.add(new Tree(xx * TILE_SIZE, yy * TILE_SIZE, 112, 174, Spritesheet.treeSpritesheet));
-                    }  else if(pixelAtual == 0xFF124e89) {
+                    }else if (pixelAtual == 0xFFff66ff) {
+                        //Carne
+                        //Game.entities.add(new Itens(xx * TILE_SIZE, yy * TILE_SIZE, 192, 192, Spritesheet.meat));
+                    }else if(pixelAtual == 0xFF124e89) {
                         //Player
                         Game.player.setX(xx * TILE_SIZE);
                         Game.player.setY(yy * TILE_SIZE);
@@ -77,6 +78,10 @@ public class World {
                 Tile tile = tiles[xx + (yy * WIDTH)];
                 tile.render(g);
             }
+
         }
+
+
+
     }
 }

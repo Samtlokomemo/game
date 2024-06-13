@@ -31,6 +31,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static String gameState = "MENU";
     public static BufferedImage image;
 
+    public static boolean win = false;
+
     public static JFrame frame;
 
     public Game(){
@@ -55,18 +57,31 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick(){ //Onde fica toda a lógica
         if(Objects.equals(gameState, "GAME")){
-            for (Entity e : entities) {
-                e.tick();
-            }
-        Iterator<Entity> iterator = enemies.iterator();
-        while (iterator.hasNext()) {
-            Entity enemy = iterator.next();
-            enemy.tick(); // Chama o método tick do inimigo
+            Iterator<Entity> iterator = entities.iterator();
+            while (iterator.hasNext()) {
+                Entity entity = iterator.next();
+                entity.tick();
 
-            // Se o inimigo foi derrotado
-            if (enemy.defeat) {
-                iterator.remove(); // Remove o inimigo da lista de forma segura
+                // Se o inimigo foi derrotado
+                if (entity.destroy) {
+                    entity.destroy = false;
+                    iterator.remove();
+                }
             }
+            Iterator<Entity> iteratorEnemy = enemies.iterator();
+            while (iteratorEnemy.hasNext()) {
+                Entity enemy = iteratorEnemy.next();
+                enemy.tick();
+
+                // Se o inimigo foi derrotado
+                if (enemy.destroy) {
+                    enemy.destroy = false;
+                    iteratorEnemy.remove();
+                }
+            }
+        if(enemies.isEmpty()){
+            gameState = "MENU";
+            win = true;
         }
 
         }else if(Objects.equals(gameState, "MENU")){
@@ -190,7 +205,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 menu.down = true;
             }
         }else if(e.getKeyCode() == KeyEvent.VK_D ||
-                 e.getKeyCode() == KeyEvent.VK_LEFT){
+                 e.getKeyCode() == KeyEvent.VK_RIGHT){
             player.right = true;
             player.moved = true;
             if(Objects.equals(gameState, "FIGHT")){

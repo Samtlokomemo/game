@@ -1,13 +1,10 @@
 package main;
 
 import java.awt.*;
-import java.io.*;
 import java.util.Objects;
 
-import static graphics.Spritesheet.bg;
-
 public class Menu{
-    public String[] options = {"NOVO JOGO", "OPÇÕES", "SAIR"};
+    public String[] options = {"JOGAR", "SAIR"};
     public int currentOption = 0, maxOptions = options.length - 1;
     public boolean up, down, enter, pause;
 
@@ -18,6 +15,10 @@ public class Menu{
     public void tick(){
         if(pause){
             options[0] = "CONTINUAR";
+        }
+        if(Game.win){
+            options[0] = "SAIR";
+            options[1] = "";
         }
         if(up){
             up = false;
@@ -35,7 +36,7 @@ public class Menu{
 
         if(enter){
             enter = false;
-            if(Objects.equals(options[currentOption], "NOVO JOGO") || Objects.equals(options[currentOption], "CONTINUAR")){
+            if(Objects.equals(options[currentOption], "JOGAR") || Objects.equals(options[currentOption], "CONTINUAR")){
                 Game.gameState = "GAME";
             }else if(Objects.equals(options[currentOption], "SAIR")){
                 System.exit(0);
@@ -62,20 +63,19 @@ public class Menu{
     }
 
     public void render(Graphics g){
-        if(!pause){
-            g.drawImage(bg, 0, 0, null);
-        }
-
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(new Color(0, 0 ,0, 100));
         g2.fillRect(0, 0, Game.WIDTH * Game.SCALE, Game.HEIGHT * Game.SCALE);
 
-        if (!pause){
+        if (pause){
             g.setColor(Color.white);
-            desenharTextoCentralizado(g, "Título do jogo", new Font("arial", Font.BOLD, 32), 150);
+            desenharTextoCentralizado(g, "JOGO PAUSADO", new Font("arial", Font.BOLD, 48), 150);
+        }else if(Game.win){
+            g.setColor(Color.white);
+            desenharTextoCentralizado(g, "VOCÊ VENCEU!", new Font("arial", Font.BOLD, 48), 150);
         }else{
             g.setColor(Color.white);
-            desenharTextoCentralizado(g, "JOGO PAUSADO", new Font("arial", Font.BOLD, 32), 150);
+            desenharTextoCentralizado(g, "SEM NOME", new Font("arial", Font.BOLD, 32), 150);
         }
 
         //Opções

@@ -16,6 +16,7 @@ import static main.Game.gameState;
 public class Enemy extends Entity{
     public int direction = 1;
     public static int cd = 60;
+    public static boolean lost = false;
 
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
         super(x, y, width, height, sprite);
@@ -64,11 +65,14 @@ public class Enemy extends Entity{
         }
 
         //COMBATE
-        if(collisionCheck(this, Game.player, x , y)){
+        if(this.collisionCheck(this, Game.player, x , y)){
             gameState = "FIGHT";
-            if(this.life<=0){
-                //this.defeat = true;
-            }
+        }
+
+        if(lost){
+            lost = false;
+            this.destroy = true;
+            gameState = "GAME";
         }
 
         if(this.curFrames == this.targetFrames){
