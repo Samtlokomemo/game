@@ -10,8 +10,9 @@ public class Tile extends Rectangle{
     protected static BufferedImage TILE_WALL = Spritesheet.getSprite(Spritesheet.tileSpritesheet, 257, 64, 64,64);
     protected static BufferedImage WATER = Spritesheet.getSprite(Spritesheet.water, 0, 0, 64, 64);
 
-    private BufferedImage sprite;
-    private int x, y;
+    private final BufferedImage sprite;
+    private final int x;
+    private final int y;
 
     public Tile(int x, int y, BufferedImage sprite){
         super(x, y, 64, 64);

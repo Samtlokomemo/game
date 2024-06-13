@@ -17,9 +17,12 @@ import static main.Game.debugger;
 import static main.Game.noKey;
 
 public class Player extends Entity{
-    private double spd = 6;
+    private final double spd = 6;
     public boolean right, up, down, left, moved, attack = false, canMove;
-    private int curAnimation = 0, curFrames = 0, targetFrames = 7, direction;
+    private int curAnimation = 0;
+    private int curFrames = 0;
+    private final int targetFrames = 7;
+    private int direction;
     private static BufferedImage[] animation = playerIdle;
     private String state = "idle";
 

@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Spritesheet {
-    public static BufferedImage playerSpritesheet, tileSpritesheet, enemySpritesheet, water, treeSpritesheet, meat, gold;
-    public static BufferedImage[] playerIdle, playerWalk, playerAtk, enemyIdle, enemyWalk, enemyAtk, treeIdle;
+    public static BufferedImage playerSpritesheet, tileSpritesheet, enemySpritesheet, water;
+    public static BufferedImage[] playerIdle, playerWalk, playerAtk, enemyIdle, enemyWalk, enemyAtk;
 
     public Spritesheet(){
         try{
@@ -16,7 +16,6 @@ public class Spritesheet {
             tileSpritesheet = ImageIO.read(Objects.requireNonNull(getClass().getResource("/tileSpritesheet.png")));
             enemySpritesheet = ImageIO.read(Objects.requireNonNull(getClass().getResource("/enemySpritesheet.png")));
             water = ImageIO.read(Objects.requireNonNull(getClass().getResource("/water.png")));
-            treeSpritesheet = ImageIO.read(Objects.requireNonNull(getClass().getResource("/tree.png")));
 
         }catch (IOException e){
             e.printStackTrace();
